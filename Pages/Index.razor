@@ -1,0 +1,63 @@
+﻿@page "/"
+@inject IDatabase db
+@inject NavigationManager mynav
+
+<h1>PRODUCTS</h1>
+
+<h3>Products</h3>
+@foreach (var p in product)
+{
+<div>
+    <h3>ProductCard</h3>
+    <p>
+        Name :  @p.Name
+    </p>
+    <p>
+        Price : @p.Price
+    </p>
+    <p>
+        Colour : @p.Colour
+    </p>
+    <p>
+        Description : @p.Desc
+    </p>
+    <p>
+        <img src="data:image/png;base64, @p.Image" height="100" />
+    </p>
+
+    <button @onclick="() => deleteBtn(p)">Delete Product</button>
+    <button @onclick="() => editBtn(p)">Edit Product</button>
+    <button @onclick="() => descBtn(p)">Display Description</button>
+
+    <br />
+</div>
+}
+
+
+@code
+{
+    private List<Product> product = new List<Product>();
+
+        protected override void OnInitialized()
+
+        {
+            db.Initialise();
+            product = db.GetAll();
+        }
+
+        private void deleteBtn(Product p)
+        {
+            db.Delete(p);
+        }
+
+        private void editBtn(Product p)
+        {
+            mynav.NavigateTo("create/" + p.Id);
+        }
+
+        private void descBtn(Product p)
+        {
+            mynav.NavigateTo("ProductDesc/" + p.Id);
+        }
+
+        }
